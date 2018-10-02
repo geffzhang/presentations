@@ -27,12 +27,12 @@
     render() {
         return (
             <div>
-                <CollectionJsonTable data={this.state.instructors} onSelect={this._handleSelect}/>
-                <CollectionJsonTable data={this.state.courses} onSelect={this._handleSelect}/>
-                <CollectionJsonTable data={this.state.students} onSelect={this._handleSelect}/>
+                <CollectionJsonTable data={this.state.instructors} onSelect={this._handleSelect} />
+                <CollectionJsonTable data={this.state.courses} onSelect={this._handleSelect} />
+                <CollectionJsonTable data={this.state.students} onSelect={this._handleSelect} />
             </div>
         );
-                }
+    }
 }
 
 class CollectionJsonTable extends React.Component {
@@ -48,14 +48,14 @@ class CollectionJsonTable extends React.Component {
             .some(item => item.links && item.links.length);
         const rows = _(this.props.data.collection.items)
             .map((item, idx) => <CollectionJsonTableRow
-                item={item}
-                containsLinks={containsLinks}
-                onSelect={this.props.onSelect}
-                key={idx}/>)
+                                    item={item}
+                                    containsLinks={containsLinks}
+                                    onSelect={this.props.onSelect}
+                                    key={idx} />)
             .value();
         return (
             <table className="table">
-                <CollectionJsonTableHeader data={this.props.data.collection.items} containsLinks={containsLinks}/>
+                <CollectionJsonTableHeader data={this.props.data.collection.items} containsLinks={containsLinks} />
                 <tbody>
                 {rows}
                 </tbody>
@@ -69,19 +69,20 @@ class CollectionJsonTableHeader extends React.Component {
         const headerCells = _(this.props.data[0].data)
             .map((datum, idx) => <th key={idx}>{datum.prompt}</th>)
             .value();
-                if (this.props.containsLinks) {
-                    headerCells.push(<th key="links"></th>);
-                }
+        if (this.props.containsLinks) {
+            headerCells.push(<th key="links"></th>);
+        }
 
-                return (
-                    <thead>
-                        <tr>
-                            {headerCells}
-                        </tr>
-                    </thead>
-                );
-            }
+        return (
+            <thead>
+            <tr>
+                {headerCells}
+            </tr>
+            </thead>
+        );
+    }
 }
+
 
 class CollectionJsonTableRow extends React.Component {
     render() {
@@ -89,7 +90,7 @@ class CollectionJsonTableRow extends React.Component {
             .map((datum, idx) => <td key={idx}>{datum.value}</td>)
             .value();
         if (this.props.containsLinks) {
-            dataCells.push(<CollectionJsonTableLinkCell key="links" links={this.props.item.links} onSelect={this.props.onSelect}/>);
+            dataCells.push(<CollectionJsonTableLinkCell key="links" links={this.props.item.links} onSelect={this.props.onSelect} />);
         }
 
         return (
@@ -103,7 +104,7 @@ class CollectionJsonTableRow extends React.Component {
 class CollectionJsonTableLinkCell extends React.Component {
     render() {
         const links = _(this.props.links)
-            .map((link, idx) => <CollectionJsonTableLink key={idx} link={link} onSelect={this.props.onSelect}/>)
+            .map((link, idx) => <CollectionJsonTableLink key={idx} link={link} onSelect={this.props.onSelect} />)
             .value();
         return (
             <td>{links}</td>
@@ -137,3 +138,4 @@ class CollectionJsonTableLink extends React.Component {
 CollectionJsonTableLink.propTypes = {
     onSelect: React.PropTypes.func.isRequired
 };
+

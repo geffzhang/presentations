@@ -1,15 +1,14 @@
 ﻿using ContosoUniversity.Server.Models;
-using Microsoft.ApplicationInsights.AspNet.Extensions;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 
 namespace ContosoUniversity.Server.Controllers
 {
     using System;
     using System.Collections.Generic;
-    using System.Net;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using CollectionJson;
-    using Microsoft.AspNet.Mvc;
-    using Microsoft.Data.Entity;
     using System.Linq;
 
     [Route("api/instructor")]
@@ -47,7 +46,7 @@ namespace ContosoUniversity.Server.Controllers
                     new Data
                     {
                         Name = "last-name",
-                        Prompt = "Surname",
+                        Prompt = "Last Name",
                         Value = i.LastName
                     },
                     new Data
@@ -85,14 +84,18 @@ namespace ContosoUniversity.Server.Controllers
         [HttpGet]
         public ActionResult Details(int id)
         {
-            return HttpNotFound();
+            return NotFound();
         }
 
         [Route("{id}/courses")]
         [HttpGet]
         public async Task<ReadDocument> Courses(int id)
         {
-            var courses = await db.CourseInstructors.Where(i => i.InstructorID == id).Include(ci => ci.Course).ThenInclude(c => c.Department).ToListAsync();
+            var courses = await db.CourseInstructors
+                .Where(i => i.InstructorID == id)
+                .Include(ci => ci.Course)
+                .ThenInclude(c => c.Department)
+                .ToListAsync();
 
             var doc = new ReadDocument
             {
@@ -132,7 +135,11 @@ namespace ContosoUniversity.Server.Controllers
         [HttpGet]
         public async Task<ReadDocument> Students(int id, int courseId)
         {
-            var course = await db.Courses.Where(c => c.CourseID == courseId).Include(c => c.Enrollments).ThenInclude(e => e.Student).SingleAsync();
+            var course = await db.Courses
+                .Where(c => c.CourseID == courseId)
+                .Include(c => c.Enrollments)
+                .ThenInclude(e => e.Student)
+                .SingleAsync();
             var enrollments = course.Enrollments;
 
             var doc = new ReadDocument
